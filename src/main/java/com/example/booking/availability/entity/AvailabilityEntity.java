@@ -1,4 +1,4 @@
-package com.example.booking.availability.entty;
+package com.example.booking.availability.entity;
 
 import com.example.booking.common.entity.BaseEntity;
 import jakarta.persistence.*;

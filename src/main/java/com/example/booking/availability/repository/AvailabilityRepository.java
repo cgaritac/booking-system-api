@@ -1,7 +1,8 @@
 package com.example.booking.availability.repository;
 
-import com.example.booking.availability.entty.AvailabilityEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.booking.availability.entity.AvailabilityEntity;
 
 import java.time.DayOfWeek;
 import java.util.List;
