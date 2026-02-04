@@ -81,7 +81,7 @@ public class ReservationService {
 
     private void validateCollision(UUID staffId, LocalDateTime start, LocalDateTime end) {
         List<ReservationEntity> collisions =
-            reservationRepository.findByStaffIdAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
+            reservationRepository.findByStaffIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
                 staffId,
                 List.of(
                     ReservationStatus.CONFIRMED.name(),

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ReservationRepository extends JpaRepository<ReservationEntity, UUID> {
-    List<ReservationEntity> findByStaffIdAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
+    List<ReservationEntity> findByStaffIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
         UUID staffId,
         List<String> statuses,
         LocalDateTime end,
