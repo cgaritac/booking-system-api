@@ -12,6 +12,6 @@ public abstract class BaseEntity {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 }
