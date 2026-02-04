@@ -20,4 +20,8 @@ public class UserEntity extends BaseEntity {
 
     @Column(nullable = false)
     private boolean active = true;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
