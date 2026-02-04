@@ -3,11 +3,13 @@ package com.example.booking.reservation.entity;
 import com.example.booking.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "reservations")
 public class ReservationEntity extends BaseEntity {
