@@ -46,7 +46,18 @@ public class JwtUtil {
                 .getBody();
     }
 
+    private static final int MIN_SECRET_LENGTH_BYTES = 32;
+
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException("jwt.secret is not configured. Define JWT_SECRET in .env with at least 32 characters.");
+        }
+        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        if (keyBytes.length < MIN_SECRET_LENGTH_BYTES) {
+            throw new IllegalStateException(
+                "jwt.secret must have at least 32 characters (256 bits) for HMAC-SHA. Actual: " + keyBytes.length + " bytes. Define JWT_SECRET in .env."
+            );
+        }
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
