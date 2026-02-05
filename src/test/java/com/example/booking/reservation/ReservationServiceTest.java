@@ -20,6 +20,7 @@ import com.example.booking.servicebooking.repository.ServiceRepository;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,12 +51,12 @@ public class ReservationServiceTest {
 
         ServiceEntity service = mock(ServiceEntity.class);
         when(service.getDurationMinutes()).thenReturn(120);
-        when(serviceRepository.findById(serviceId)).thenReturn(Optional.of(service));
+        when(serviceRepository.findById(Objects.requireNonNull(serviceId))).thenReturn(Optional.of(service));
 
         AvailabilityEntity availability = mock(AvailabilityEntity.class);
         when(availability.getStartTime()).thenReturn(LocalTime.MIN);
         when(availability.getEndTime()).thenReturn(LocalTime.MAX);
-        when(availabilityRepository.findByStaffIdAndDayOfWeek(staffId, startTime.getDayOfWeek()))
+        when(availabilityRepository.findByStaffIdAndDayOfWeek(Objects.requireNonNull(staffId), startTime.getDayOfWeek()))
             .thenReturn(List.of(availability));
 
         ReservationEntity existingReservation = mock(ReservationEntity.class);
@@ -72,7 +73,10 @@ public class ReservationServiceTest {
         assertThrows(
             IllegalArgumentException.class,
             () -> reservationService.createReservation(
-                clientId, staffId, serviceId, startTime
+                Objects.requireNonNull(clientId),
+                Objects.requireNonNull(staffId),
+                Objects.requireNonNull(serviceId),
+                Objects.requireNonNull(startTime)
             )
         );
     }
