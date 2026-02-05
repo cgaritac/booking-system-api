@@ -6,6 +6,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.authentication.*;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -18,6 +21,10 @@ public class AuthController {
     }
 
     @Operation(security = {})
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Login successful"),
+        @ApiResponse(responseCode = "400", description = "Invalid credentials")
+    })
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         authManager.authenticate(

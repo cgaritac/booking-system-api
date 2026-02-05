@@ -15,6 +15,9 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationController {
@@ -24,6 +27,10 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Reservation created"),
+        @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationResponse createReservation(@RequestBody @Valid CreateReservationRequest request) {
