@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "availability")
+@Table(name = "availabilities")
 public class AvailabilityEntity extends BaseEntity {
     @Column(nullable = false)
     private UUID staffId;

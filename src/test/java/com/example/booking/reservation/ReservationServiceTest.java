@@ -56,28 +56,25 @@ public class ReservationServiceTest {
         AvailabilityEntity availability = mock(AvailabilityEntity.class);
         when(availability.getStartTime()).thenReturn(LocalTime.MIN);
         when(availability.getEndTime()).thenReturn(LocalTime.MAX);
-        when(availabilityRepository.findByStaffIdAndDayOfWeek(Objects.requireNonNull(staffId), startTime.getDayOfWeek()))
-            .thenReturn(List.of(availability));
+        when(availabilityRepository.findByStaffIdAndDayOfWeek(Objects.requireNonNull(staffId),
+                startTime.getDayOfWeek()))
+                .thenReturn(List.of(availability));
 
         ReservationEntity existingReservation = mock(ReservationEntity.class);
         when(reservationRepository.findByStaffIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
-            eq(staffId),
-            eq(List.of(
-                ReservationStatus.CONFIRMED.name(),
-                ReservationStatus.PENDING.name()
-            )),
-            eq(endTime),
-            eq(startTime)
-        )).thenReturn(List.of(existingReservation));
+                eq(staffId),
+                eq(List.of(
+                        ReservationStatus.CONFIRMED,
+                        ReservationStatus.PENDING)),
+                eq(endTime),
+                eq(startTime))).thenReturn(List.of(existingReservation));
 
         assertThrows(
-            IllegalArgumentException.class,
-            () -> reservationService.createReservation(
-                Objects.requireNonNull(clientId),
-                Objects.requireNonNull(staffId),
-                Objects.requireNonNull(serviceId),
-                Objects.requireNonNull(startTime)
-            )
-        );
+                IllegalArgumentException.class,
+                () -> reservationService.createReservation(
+                        Objects.requireNonNull(clientId),
+                        Objects.requireNonNull(staffId),
+                        Objects.requireNonNull(serviceId),
+                        Objects.requireNonNull(startTime)));
     }
 }
