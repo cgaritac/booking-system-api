@@ -32,6 +32,12 @@ public class ReservationService {
         this.serviceRepository = serviceRepository;
     }
 
+    public List<ReservationEntity> getAllReservations() {
+        List<ReservationEntity> reservations = reservationRepository.findAll();
+
+        return reservations;
+    }
+
     @Transactional
     public ReservationEntity createReservation(
             @NonNull UUID clientId,
