@@ -36,7 +36,7 @@ public class ReservationController {
     public ReservationResponse createReservation(@RequestBody @Valid CreateReservationRequest request) {
         ReservationEntity reservation =
             reservationService.createReservation(
-                request.cliendId(),
+                request.clientId(),
                 request.staffId(),
                 request.serviceId(),
                 request.startTime()

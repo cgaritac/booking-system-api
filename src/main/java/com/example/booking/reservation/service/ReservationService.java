@@ -23,11 +23,10 @@ public class ReservationService {
     private final AvailabilityRepository availabilityRepository;
     private final ServiceRepository serviceRepository;
 
-    public ReservationService (
-        ReservationRepository reservationRepository,
-        AvailabilityRepository availabilityRepository,
-        ServiceRepository serviceRepository
-    ) {
+    public ReservationService(
+            ReservationRepository reservationRepository,
+            AvailabilityRepository availabilityRepository,
+            ServiceRepository serviceRepository) {
         this.reservationRepository = reservationRepository;
         this.availabilityRepository = availabilityRepository;
         this.serviceRepository = serviceRepository;
@@ -35,17 +34,16 @@ public class ReservationService {
 
     @Transactional
     public ReservationEntity createReservation(
-        @NonNull UUID clientId,
-        @NonNull UUID staffId,
-        @NonNull UUID serviceId,
-        @NonNull LocalDateTime startTime
-    ) {
+            @NonNull UUID clientId,
+            @NonNull UUID staffId,
+            @NonNull UUID serviceId,
+            @NonNull LocalDateTime startTime) {
         if (startTime.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Reservation cannot be in the past");
         }
 
         ServiceEntity service = serviceRepository.findById(serviceId)
-            .orElseThrow(() -> new IllegalArgumentException("Service not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Service not found"));
 
         LocalDateTime endTime = startTime.plusMinutes(service.getDurationMinutes());
 
@@ -69,10 +67,8 @@ public class ReservationService {
 
         List<AvailabilityEntity> availabilities = availabilityRepository.findByStaffIdAndDayOfWeek(staffId, dayOfWeek);
 
-        boolean available = availabilities.stream().anyMatch(a ->
-            !start.toLocalTime().isBefore(a.getStartTime()) &&
-            !end.toLocalTime().isAfter(a.getEndTime())
-        );
+        boolean available = availabilities.stream().anyMatch(a -> !start.toLocalTime().isBefore(a.getStartTime()) &&
+                !end.toLocalTime().isAfter(a.getEndTime()));
 
         if (!available) {
             throw new IllegalArgumentException("Staff not available at this time");
@@ -80,17 +76,15 @@ public class ReservationService {
     }
 
     private void validateCollision(UUID staffId, LocalDateTime start, LocalDateTime end) {
-        List<ReservationEntity> collisions =
-            reservationRepository.findByStaffIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
-                staffId,
-                List.of(
-                    ReservationStatus.CONFIRMED.name(),
-                    ReservationStatus.PENDING.name()
-                ),
-                end,
-                start
-            );
-        
+        List<ReservationEntity> collisions = reservationRepository
+                .findByStaffIdAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
+                        staffId,
+                        List.of(
+                                ReservationStatus.CONFIRMED,
+                                ReservationStatus.PENDING),
+                        end,
+                        start);
+
         if (!collisions.isEmpty()) {
             throw new IllegalArgumentException("Reservation time slot is already taken");
         }
