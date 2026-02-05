@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key for signing JWT tokens. Use at least 256 bits (32 characters) for HS256."
+    }
+  ]
+}
