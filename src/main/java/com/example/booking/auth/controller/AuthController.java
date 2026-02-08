@@ -20,7 +20,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    @Operation(security = {})
+    @Operation(security = {}, summary = "Login")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Login successful"),
         @ApiResponse(responseCode = "400", description = "Invalid credentials")

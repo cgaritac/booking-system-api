@@ -28,6 +28,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
+    @Operation(summary = "Create a new reservation")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Reservation created"),
             @ApiResponse(responseCode = "400", description = "Invalid request")
