@@ -3,18 +3,23 @@ package com.example.booking.servicebooking.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.booking.servicebooking.dto.CreateServiceRequest;
 import com.example.booking.servicebooking.dto.ServiceMapper;
 import com.example.booking.servicebooking.dto.ServiceResponse;
+import com.example.booking.servicebooking.entity.ServiceEntity;
 import com.example.booking.servicebooking.service.ServiceService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
@@ -24,6 +29,20 @@ public class ServiceController {
 
     public ServiceController(ServiceService serviceService) {
         this.serviceService = serviceService;
+    }
+
+    @Operation(summary = "Create a new service")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Service created"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ServiceResponse createService(@RequestBody @Valid CreateServiceRequest request) {
+        ServiceEntity service = serviceService.createServiceEntity(request);
+
+        return ServiceMapper.toResponse(service);
+
     }
 
     @Operation(summary = "Get all services")
