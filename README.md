@@ -17,7 +17,9 @@ It includes JWT-based authentication, PostgreSQL persistence, Flyway migrations,
   - [Running the Application](#running-the-application)
 - [API Overview](#api-overview)
   - [Authentication](#authentication)
+  - [Availability](#availability)
   - [Reservations](#reservations)
+  - [Services](#services)
 - [Security](#security)
 - [Error Handling](#error-handling)
 - [Testing](#testing)
@@ -121,16 +123,16 @@ These tables are mapped to the corresponding JPA entities in the `entity` packag
 
 ## Tech Stack
 
-- **Language**: Java 17  
-- **Framework**: Spring Boot 3 (Web, Data JPA, Security)  
-- **Database**: PostgreSQL  
-- **Migrations**: Flyway  
-- **Authentication**: JWT (`jjwt` library)  
+- **Language**: Java 17
+- **Framework**: Spring Boot 3 (Web, Data JPA, Security)
+- **Database**: PostgreSQL
+- **Migrations**: Flyway
+- **Authentication**: JWT (`jjwt` library)
 - **Configuration**:
   - `dotenv-java` for loading environment variables from `.env`
   - YAML-based configuration (`application.yaml`)
-- **API Docs**: `springdoc-openapi-starter-webmvc-ui`  
-- **Testing**: JUnit 5, Mockito, Spring Security Test  
+- **API Docs**: `springdoc-openapi-starter-webmvc-ui`
+- **Testing**: JUnit 5, Mockito, Spring Security Test
 
 ---
 
@@ -167,7 +169,6 @@ If you use `.env`, it is automatically loaded at startup via `Dotenv` in `Bookin
    ```
 
 2. **Configure the database**
-
    - Create a PostgreSQL database (e.g. `booking_db`).
    - Ensure `DB_URL`, `DB_USER`, `DB_PASSWORD`, and `JWT_SECRET` are set.
 
@@ -238,6 +239,31 @@ Use the returned JWT as a `Bearer` token in the `Authorization` header for prote
 Authorization: Bearer <jwt-token>
 ```
 
+### Availability
+
+Base path: `/api/availability` (secured by JWT)
+
+- **GET `/api/availability`**
+
+  **Description**: Retrieves all staff availabilities.
+
+  **Successful response** (`200 OK`, `List<AvailabilityResponse>`):
+
+  ```json
+  [
+    {
+      "id": "uuid-of-availability",
+      "staffId": "uuid-of-staff",
+      "dayOfWeek": "MONDAY",
+      "startTime": "09:00:00",
+      "endTime": "18:00:00"
+    }
+  ]
+  ```
+
+  **Error responses**:
+  - `401 Unauthorized` – missing or invalid JWT.
+
 ### Reservations
 
 Base path: `/api/reservations` (secured by JWT)
@@ -269,6 +295,87 @@ Base path: `/api/reservations` (secured by JWT)
 
   **Error responses**:
   - `400 Bad Request` – invalid request data or business rule violation (e.g. overlapping reservation, out-of-availability).
+  - `401 Unauthorized` – missing or invalid JWT.
+
+- **GET `/api/reservations`**
+
+  **Description**: Retrieves all existing reservations.
+
+  **Successful response** (`200 OK`, `List<ReservationResponse>`):
+
+  ```json
+  [
+    {
+      "id": "uuid-of-reservation",
+      "clientId": "uuid-of-client",
+      "staffId": "uuid-of-staff",
+      "serviceId": "uuid-of-service",
+      "startTime": "2026-02-05T10:00:00",
+      "endTime": "2026-02-05T11:00:00",
+      "status": "CONFIRMED"
+    }
+  ]
+  ```
+
+  **Error responses**:
+  - `401 Unauthorized` – missing or invalid JWT.
+
+### Services
+
+Base path: `/api/service` (secured by JWT)
+
+- **POST `/api/service`**
+
+  **Description**: Creates a new service.
+
+  **Request body** (`CreateServiceRequest`):
+
+  ```json
+  {
+    "name": "Haircut",
+    "description": "Premium haircut service",
+    "durationMinutes": 30,
+    "price": 25.0
+  }
+  ```
+
+  **Successful response** (`201 Created`, `ServiceResponse`):
+
+  ```json
+  {
+    "id": "uuid-of-service",
+    "name": "Haircut",
+    "description": "Premium haircut service",
+    "durationMinutes": 30,
+    "price": 25.0,
+    "active": true
+  }
+  ```
+
+  **Error responses**:
+  - `400 Bad Request` – invalid input.
+  - `401 Unauthorized` – missing or invalid JWT.
+
+- **GET `/api/service`**
+
+  **Description**: Retrieves all services.
+
+  **Successful response** (`200 OK`, `List<ServiceResponse>`):
+
+  ```json
+  [
+    {
+      "id": "uuid-of-service",
+      "name": "Haircut",
+      "description": "Premium haircut service",
+      "durationMinutes": 30,
+      "price": 25.0,
+      "active": true
+    }
+  ]
+  ```
+
+  **Error responses**:
   - `401 Unauthorized` – missing or invalid JWT.
 
 ---
@@ -338,19 +445,6 @@ Run tests with:
 # or
 mvn test
 ```
-
----
-
-## Possible Improvements
-
-Some directions for future development:
-
-- Add CRUD endpoints for services and staff availability.
-- List reservations by client or staff.
-- Implement full integration tests using an in-memory database or Testcontainers.
-- Add refresh tokens and token revocation strategies.
-- Add role-based access control (admin vs staff vs client).
-- Improve validation messages and internationalization (i18n).
 
 ---
 
