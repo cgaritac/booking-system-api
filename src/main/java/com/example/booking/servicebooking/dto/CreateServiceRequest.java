@@ -1,9 +1,11 @@
 package com.example.booking.servicebooking.dto;
 
-import io.micrometer.common.lang.NonNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public record CreateServiceRequest(
-        @NonNull String name,
-        @NonNull int durationMinutes,
-        @NonNull double price) {
+        @NotBlank String name,
+        @NotNull @Positive int durationMinutes,
+        @NotNull @Positive double price) {
 }
