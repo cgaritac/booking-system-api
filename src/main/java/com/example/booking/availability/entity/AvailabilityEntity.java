@@ -3,12 +3,15 @@ package com.example.booking.availability.entity;
 import com.example.booking.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "availabilities")
 public class AvailabilityEntity extends BaseEntity {
