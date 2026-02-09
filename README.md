@@ -243,6 +243,36 @@ Authorization: Bearer <jwt-token>
 
 Base path: `/api/availability` (secured by JWT)
 
+- **POST `/api/availability`**
+
+  **Description**: Creates a new availability entry for a staff member.
+
+  **Request body** (`CreateAvailabilityRequest`):
+
+  ```json
+  {
+    "startTime": "08:00:00",
+    "endTime": "17:00:00",
+    "dayOfWeek": "TUESDAY"
+  }
+  ```
+
+  **Successful response** (`201 Created`, `AvailabilityResponse`):
+
+  ```json
+  {
+    "id": "uuid-of-availability",
+    "staffId": "uuid-of-staff",
+    "dayOfWeek": "TUESDAY",
+    "startTime": "08:00:00",
+    "endTime": "17:00:00"
+  }
+  ```
+
+  **Error responses**:
+  - `400 Bad Request` – invalid input.
+  - `401 Unauthorized` – missing or invalid JWT.
+
 - **GET `/api/availability`**
 
   **Description**: Retrieves all staff availabilities.
