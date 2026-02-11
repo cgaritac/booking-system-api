@@ -251,6 +251,7 @@ Base path: `/api/availability` (secured by JWT)
 
   ```json
   {
+    "staffId": "uuid-of-staff",
     "startTime": "08:00:00",
     "endTime": "17:00:00",
     "dayOfWeek": "TUESDAY"
@@ -262,7 +263,6 @@ Base path: `/api/availability` (secured by JWT)
   ```json
   {
     "id": "uuid-of-availability",
-    "staffId": "uuid-of-staff",
     "dayOfWeek": "TUESDAY",
     "startTime": "08:00:00",
     "endTime": "17:00:00"
@@ -272,6 +272,21 @@ Base path: `/api/availability` (secured by JWT)
   **Error responses**:
   - `400 Bad Request` – invalid input.
   - `401 Unauthorized` – missing or invalid JWT.
+
+- **DELETE `/api/availability`**
+
+  **Description**: Deletes an availability entry by its ID.
+
+  **Parameters**:
+  - `id` (Query, UUID, required)
+
+  **Successful response** (`200 OK`)
+
+  **Error responses**:
+  - `400 Bad Request` – invalid ID or availability not found.
+  - `401 Unauthorized` – missing or invalid JWT.
+
+  ***
 
 - **GET `/api/availability`**
 
@@ -375,10 +390,8 @@ Base path: `/api/service` (secured by JWT)
   {
     "id": "uuid-of-service",
     "name": "Haircut",
-    "description": "Premium haircut service",
     "durationMinutes": 30,
-    "price": 25.0,
-    "active": true
+    "price": 25.0
   }
   ```
 
@@ -397,10 +410,8 @@ Base path: `/api/service` (secured by JWT)
     {
       "id": "uuid-of-service",
       "name": "Haircut",
-      "description": "Premium haircut service",
       "durationMinutes": 30,
-      "price": 25.0,
-      "active": true
+      "price": 25.0
     }
   ]
   ```
