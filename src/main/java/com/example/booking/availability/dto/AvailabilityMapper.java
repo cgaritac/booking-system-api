@@ -1,11 +1,14 @@
 package com.example.booking.availability.dto;
 
+import org.springframework.lang.NonNull;
+
 import com.example.booking.availability.entity.AvailabilityEntity;
 
 public class AvailabilityMapper {
 
-    public static AvailabiityResponse toResponse(AvailabilityEntity entity) {
-        return new AvailabiityResponse(
+    @NonNull
+    public static AvailabilityResponse toResponse(@NonNull AvailabilityEntity entity) {
+        return new AvailabilityResponse(
                 entity.getId(),
                 entity.getDayOfWeek(),
                 entity.getStartTime(),

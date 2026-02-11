@@ -1,14 +1,19 @@
 package com.example.booking.availability.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.validation.Valid;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import com.example.booking.availability.dto.AvailabilityMapper;
 import com.example.booking.availability.dto.CreateAvailabilityRequest;
-import com.example.booking.availability.dto.AvailabiityResponse;
+import com.example.booking.availability.dto.AvailabilityResponse;
 import com.example.booking.availability.entity.AvailabilityEntity;
 import com.example.booking.availability.service.AvailabilityService;
 
@@ -38,7 +43,8 @@ public class AvailabilityController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AvailabiityResponse createAvailability(@RequestBody @Valid CreateAvailabilityRequest request) {
+    @NonNull
+    public AvailabilityResponse createAvailability(@RequestBody @Valid @NonNull CreateAvailabilityRequest request) {
         AvailabilityEntity availability = availabilityService.createAvailability(request);
 
         return AvailabilityMapper.toResponse(availability);
@@ -51,9 +57,21 @@ public class AvailabilityController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<AvailabiityResponse> getAllAvailabilities() {
-        return availabilityService.getAllAvailabilities().stream()
+    @NonNull
+    public List<AvailabilityResponse> getAllAvailabilities() {
+        return Objects.requireNonNull(availabilityService.getAllAvailabilities().stream()
                 .map(AvailabilityMapper::toResponse)
-                .toList();
+                .toList());
+    }
+
+    @Operation(summary = "Delete an availability")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Availability deleted"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAvailability(@RequestParam @NonNull UUID id) {
+        availabilityService.deleteAvailability(id);
     }
 }
