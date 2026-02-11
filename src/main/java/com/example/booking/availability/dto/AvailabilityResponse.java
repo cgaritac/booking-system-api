@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AvailabiityResponse {
+public class AvailabilityResponse {
     private UUID id;
     private DayOfWeek dayOfWeek;
     private LocalTime startTime;

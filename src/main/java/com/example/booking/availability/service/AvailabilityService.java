@@ -1,7 +1,10 @@
 package com.example.booking.availability.service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.example.booking.availability.dto.CreateAvailabilityRequest;
@@ -18,18 +21,27 @@ public class AvailabilityService {
         this.availabilityRepository = availabilityRepository;
     }
 
+    @NonNull
     public List<AvailabilityEntity> getAllAvailabilities() {
-        return availabilityRepository.findAll();
+        return Objects.requireNonNull(availabilityRepository.findAll());
     }
 
     @Transactional
-    public AvailabilityEntity createAvailability(CreateAvailabilityRequest request) {
+    @NonNull
+    public AvailabilityEntity createAvailability(@NonNull CreateAvailabilityRequest request) {
         AvailabilityEntity availability = new AvailabilityEntity();
         availability.setStaffId(request.staffId());
         availability.setDayOfWeek(request.dayOfWeek());
         availability.setStartTime(request.startTime());
         availability.setEndTime(request.endTime());
 
-        return availabilityRepository.save(availability);
+        return Objects.requireNonNull(availabilityRepository.save(availability));
+    }
+
+    @Transactional
+    public void deleteAvailability(@NonNull UUID id) {
+        AvailabilityEntity availability = Objects.requireNonNull(availabilityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Availability not found with id: " + id)));
+        availabilityRepository.delete(availability);
     }
 }
