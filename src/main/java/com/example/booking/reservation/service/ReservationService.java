@@ -95,4 +95,25 @@ public class ReservationService {
             throw new IllegalArgumentException("Reservation time slot is already taken");
         }
     }
+
+    @Transactional
+    public void cancelReservation(@NonNull UUID reservationId) {
+        ReservationEntity reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
+
+        if (reservation.getStatus() == ReservationStatus.CANCELLED) {
+            throw new IllegalArgumentException("Reservation is already cancelled");
+        }
+
+        if (reservation.getStatus() == ReservationStatus.COMPLETED) {
+            throw new IllegalArgumentException("Reservation cannot be cancelled as it is already completed");
+        }
+
+        if (reservation.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Reservation cannot be cancelled as it has already started");
+        }
+
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
+    }
 }

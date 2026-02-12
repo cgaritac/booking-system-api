@@ -5,14 +5,19 @@ import com.example.booking.reservation.entity.ReservationEntity;
 import com.example.booking.reservation.service.ReservationService;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -56,5 +61,16 @@ public class ReservationController {
         return reservationService.getAllReservations().stream()
                 .map(ReservationMapper::toResponse)
                 .toList();
+    }
+
+    @Operation(summary = "Cancel a reservation")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Reservation cancelled"),
+            @ApiResponse(responseCode = "400", description = "Invalid request")
+    })
+    @DeleteMapping("/{reservationId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void cancelReservation(@RequestParam @NonNull UUID reservationId) {
+        reservationService.cancelReservation(reservationId);
     }
 }
